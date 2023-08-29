@@ -12,18 +12,20 @@ import FileUpload from '../FileUpload'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/hooks/useModalStore'
+import { useEffect } from 'react'
 
 const formSchema = z.object({
     name: z.string().min(1, {message: 'Server name is required.'}),
     imageUrl: z.string().min(1, {message: 'Server image is required'})
 })
 
-const CreateServerModal = () => {
+const EditServerModal = () => {
 
- const { isOpen, onClose, type } = useModal()
+ const { isOpen, onClose, type, data } = useModal()
  const router = useRouter()
 
- const isModalOpen = isOpen && type === 'createServer'
+ const isModalOpen = isOpen && type === 'editServer'
+ const { server } = data
 
  const form = useForm({
     resolver: zodResolver(formSchema),
@@ -33,11 +35,18 @@ const CreateServerModal = () => {
     }
  })
 
+ useEffect(() => {
+    if(server) {
+        form.setValue('name', server.name)
+        form.setValue('imageUrl', server.imageUrl)
+    }
+ }, [server, form])
+
  const isLoading = form.formState.isSubmitting
 
  const onSumbit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post('/api/servers', values)
+      await axios.patch(`/api/servers/${server?.id}`, values)
 
       form.reset()
       router.refresh()
@@ -95,7 +104,7 @@ const CreateServerModal = () => {
             </div>
             <DialogFooter className='bg-neutral-800 px-6 py-4'>
               <Button isLoading={isLoading} type='submit' variant='primary'>
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -105,4 +114,4 @@ const CreateServerModal = () => {
   )
 }
 
-export default CreateServerModal
+export default EditServerModal
