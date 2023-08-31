@@ -12,12 +12,12 @@ interface ServerFooterProps {
 
 const ServerFooter = ({name, userId}: ServerFooterProps) => {
   return (
-    <div className="w-full bg-white dark:bg-neutral-800 p-2">
+    <div className="w-full dark:bg-[#1E1F22] bg-[#E3E5E8] p-2">
         <div className="grid grid-cols-2">
          <div className="flex items-center gap-2">
          <UserButton appearance={{ elements: { avatarBox: 'h-[35px] w-[35px]'}}}/>
          <div className="block truncate">
-         <p className="text-[14px] font-bold truncate">
+         <p className="text-[12.5px] font-bold truncate">
             {name}
           </p>
           <p className="text-[11px] font-semibold dark:text-zinc-400 truncate -mt-1">

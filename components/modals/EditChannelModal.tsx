@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import axios from 'axios'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useModal } from '@/hooks/useModalStore'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { ChannelType } from '@prisma/client'
@@ -20,42 +20,40 @@ const formSchema = z.object({
     type: z.nativeEnum(ChannelType)
 })
 
-const CreateChannelModal = () => {
+const EditChannelModal = () => {
 
  const { isOpen, onClose, type, data } = useModal()
  const router = useRouter()
- const params = useParams()
 
- const isModalOpen = isOpen && type === 'createChannel'
- const { channelType } = data
+ const isModalOpen = isOpen && type === 'editChannel'
+ const { channel, server } = data
 
  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
         name: '',
-        type: channelType || ChannelType.TEXT
+        type: channel?.type || ChannelType.TEXT
     }
  })
 
  useEffect(() => {
-   if(channelType) {
-    form.setValue('type', channelType)
-   } else {
-    form.setValue('type', ChannelType.TEXT)
+   if(channel) {
+    form.setValue('name', channel.name)
+    form.setValue('type', channel.type)
    }
- }, [channelType, form])
+ }, [form, channel])
 
  const isLoading = form.formState.isSubmitting
 
  const onSumbit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: '/api/channels',
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params?.serverId
+          serverId: server?.id
         }
       })
-      await axios.post(url, values)
+      await axios.patch(url, values)
 
       form.reset()
       router.refresh()
@@ -76,7 +74,7 @@ const CreateChannelModal = () => {
       <DialogContent className="bg-neutral-900 text-neutral-100 p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center rfont-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
         {/* STARTS CREATE SERVER FORM */}
@@ -122,7 +120,7 @@ const CreateChannelModal = () => {
             </div>
             <DialogFooter className='bg-neutral-800 px-6 py-4'>
               <Button isLoading={isLoading} type='submit' variant='primary'>
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -132,4 +130,4 @@ const CreateChannelModal = () => {
   )
 }
 
-export default CreateChannelModal
+export default EditChannelModal
