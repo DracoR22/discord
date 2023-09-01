@@ -6,6 +6,7 @@ import { dark } from '@clerk/themes'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { cn } from '@/lib/utils'
 import ModalProvider from '@/components/providers/ModalProvider'
+import { SocketProvider } from '@/components/providers/SocketProvider'
 
 const font = Open_Sans({ subsets: ['latin'] })
 
@@ -24,8 +25,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, 'bg-white dark:bg-[#313338]')}>
         <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false} storageKey='discord-theme'>
+          <SocketProvider>
           <ModalProvider/>
             {children}
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>
