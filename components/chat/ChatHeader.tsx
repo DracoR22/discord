@@ -2,6 +2,7 @@ import { Hash } from "lucide-react"
 import MobileToggle from "../MobileToggle"
 import UserAvatar from "../UserAvatar"
 import ChatHeaderItem from "../ChatHeaderItem"
+import ChatVideoButton from "./ChatVideoButton"
 
 interface ChatHeaderProps {
     serverId: string
@@ -25,6 +26,9 @@ const ChatHeader = ({serverId, type, name, imageUrl}: ChatHeaderProps) => {
         {name}
       </p>
       <div className="ml-auto md:flex items-center hidden">
+        {type === 'conversation' && (
+          <ChatVideoButton/>
+        )}
         <ChatHeaderItem/>
       </div>
     </div>
