@@ -15,7 +15,7 @@ const ServerFooter = ({name, userId}: ServerFooterProps) => {
     <div className="w-full dark:bg-[#1E1F22] bg-[#E3E5E8] p-2">
         <div className="grid grid-cols-2">
          <div className="flex items-center gap-2">
-         <UserButton appearance={{ elements: { avatarBox: 'h-[35px] w-[35px]'}}}/>
+         <UserButton appearance={{ elements: { avatarBox: 'h-[35px] w-[35px]'}}} afterSignOutUrl="/"/>
          <div className="block truncate">
          <p className="text-[12.5px] font-bold truncate">
             {name}
